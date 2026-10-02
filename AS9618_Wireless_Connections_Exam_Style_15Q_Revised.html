@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AS 9618 Chapter 2 - Wireless Connections Exam Quiz</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f3f5f7;color:#18212b}
+.container{max-width:900px;margin:auto;padding:24px 16px 50px}
+.header{background:#17365d;color:white;border-radius:12px;padding:24px;margin-bottom:16px}
+.header h1{font-size:25px;margin:0 0 6px}
+.header p{margin:0;font-size:14px}
+.info{background:white;border-radius:10px;padding:14px 17px;margin-bottom:16px;border:1px solid #dfe4e8}
+.progress{display:flex;justify-content:space-between;font-weight:bold;margin-bottom:9px}
+.bar{height:8px;background:#e3e7eb;border-radius:10px;overflow:hidden}
+.fill{height:100%;background:#2f75b5;width:0;transition:.25s}
+.question-card,.result{background:white;border-radius:12px;padding:25px;border:1px solid #dfe4e8;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.exam-label{font-size:13px;color:#64717e;font-weight:bold;margin-bottom:10px}
+.question{font-size:19px;font-weight:700;line-height:1.45;margin-bottom:20px}
+.option{display:block;border:1px solid #cfd6dd;border-radius:8px;padding:13px 14px;margin:10px 0;cursor:pointer;background:#fff}
+.option:hover{background:#f7fafc;border-color:#7f9db9}
+.option input{margin-right:10px}
+.option.correct{border-color:#2e7d32;background:#edf7ee}
+.option.wrong{border-color:#c62828;background:#fff0f0}
+.feedback{display:none;margin-top:17px;padding:13px 15px;border-radius:8px;font-size:14px}
+.feedback.show{display:block}
+.feedback.good{background:#edf7ee;color:#1b5e20}
+.feedback.bad{background:#fff3e0;color:#7a4b00}
+.actions{margin-top:20px}
+button{border:0;border-radius:8px;padding:11px 18px;font-weight:bold;font-size:14px;cursor:pointer;margin-right:7px}
+.primary{background:#17365d;color:#fff}
+.secondary{background:#e8edf2;color:#17365d}
+button:disabled{opacity:.45;cursor:not-allowed}
+.result{display:none}
+.big-score{font-size:40px;font-weight:800;color:#17365d}
+.review{margin-top:18px;border-top:1px solid #ddd}
+.review-item{padding:13px 0;border-bottom:1px solid #e3e6e9}
+.small{font-size:12px;color:#687582}
+@media(max-width:600px){
+.container{padding:14px 10px 35px}.header{padding:19px}.header h1{font-size:21px}
+.question-card,.result{padding:18px}.question{font-size:17px}
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<div class="header">
+<h1>AS 9618 Chapter 2 — Wireless Connections</h1>
+<p>Exam-style practice: Wireless networks, Wi-Fi, Bluetooth, Microwave and Satellite</p>
+</div>
+
+<div class="info">
+<strong>Instructions:</strong> Select one answer for each question. Each question is worth 1 mark.
+</div>
+
+<div class="info">
+<div class="progress">
+<span id="progress">Question 1 of 15</span>
+<span id="score">Score: 0</span>
+</div>
+<div class="bar"><div id="fill" class="fill"></div></div>
+</div>
+
+<div id="quiz"></div>
+<div id="result" class="result"></div>
+
+</div>
+
+<script>
+const questions = [
+{
+q:"A school wants students to connect laptops to the network without using physical cables. Which transmission method should be used?",
+o:["Wireless","Twisted pair","Fibre optic","Coaxial"],
+a:0,
+e:"Wireless networking transmits data without a physical cable."
+},
+{
+q:"A laptop is connected to a wireless access point in a classroom. Which type of network connection is being used?",
+o:["Wi-Fi","Bluetooth","Satellite","Microwave"],
+a:0,
+e:"Wi-Fi is used to connect devices such as laptops, tablets and smartphones to a wireless access point."
+},
+{
+q:"A smartphone needs to connect directly to a pair of wireless headphones over a short distance. Which technology is most suitable?",
+o:["Bluetooth","Satellite","Microwave","Fibre optic"],
+a:0,
+e:"Bluetooth is typically used for direct connections between nearby devices such as smartphones and headphones."
+},
+{
+q:"A wireless keyboard is connected directly to a computer. Which technology is most likely to be used?",
+o:["Bluetooth","Satellite","Microwave","Ethernet"],
+a:0,
+e:"Bluetooth is commonly used to connect peripherals such as keyboards and mice directly to a device."
+},
+{
+q:"A Bluetooth device is communicating using one radio frequency, but that frequency is already being used. What happens?",
+o:["It selects another channel","It changes to a fibre-optic connection","It sends the data through a satellite","It stops using radio waves permanently"],
+a:0,
+e:"Bluetooth can select another channel from its available frequencies. This is part of frequency hopping."
+},
+{
+q:"Which term describes the technique used by Bluetooth in which channels are changed between different frequencies?",
+o:["Frequency hopping","Packet switching","Time division multiplexing","Circuit switching"],
+a:0,
+e:"Bluetooth uses spread spectrum frequency hopping, changing between available frequency channels."
+},
+{
+q:"Which type of network is associated with a Bluetooth connection between nearby personal devices?",
+o:["WPAN","WAN","MAN","Wired LAN"],
+a:0,
+e:"Bluetooth is used for a Wireless Personal Area Network (WPAN)."
+},
+{
+q:"A company needs to send data wirelessly between two buildings several kilometres apart. The antennas can be positioned so that there are no buildings or mountains between them. Which technology is most suitable?",
+o:["Microwave","Bluetooth","Wi-Fi only","Twisted pair"],
+a:0,
+e:"Microwave transmission can provide a directional wireless link over relatively long distances when a clear line-of-sight path is available."
+},
+{
+q:"What is meant by line-of-sight when using microwave transmission?",
+o:["There is a relatively clear, unobstructed path between the antennas","The antennas are connected using a physical cable","The signal travels through a satellite","The receiver must be inside the same building"],
+a:0,
+e:"Microwave transmission generally requires a relatively clear, unobstructed path between the transmitting and receiving antennas."
+},
+{
+q:"A mountain is placed directly between two microwave antennas. What is the most likely effect?",
+o:["The signal may be blocked","The signal automatically changes to Bluetooth","The bandwidth becomes unlimited","The signal becomes a fibre-optic signal"],
+a:0,
+e:"Buildings, mountains and other physical obstacles can block microwave signals."
+},
+{
+q:"Which environmental condition can reduce the quality of a microwave transmission?",
+o:["Heavy rain","Low battery in a keyboard","A damaged optical disc","A larger hard disk"],
+a:0,
+e:"Heavy rain can interfere with microwave signals."
+},
+{
+q:"Which statement about microwave transmission is correct?",
+o:["It uses high-frequency electromagnetic waves","It uses sound waves through copper cable","It always requires a satellite","It uses light pulses through fibre optic"],
+a:0,
+e:"Microwave transmission uses high-frequency electromagnetic waves through the air."
+},
+{
+q:"A communication system must provide coverage to a remote location where installing a physical cable would be difficult. Which method is most suitable?",
+o:["Satellite","Bluetooth","Twisted pair","Coaxial"],
+a:0,
+e:"Satellite communication can provide wide geographical coverage and is useful for remote locations where physical cables are difficult to install."
+},
+{
+q:"Which sequence correctly describes communication using a satellite?",
+o:["Ground station → satellite → another ground station","Ground station → Bluetooth device → satellite","Satellite → fibre cable → satellite","Router → coaxial cable → satellite only"],
+a:0,
+e:"A ground station sends a signal up to the satellite, which relays it down to another ground station."
+},
+{
+q:"Why can satellite communication have high latency?",
+o:["The signal has to travel a very large distance","The signal must always pass through a Bluetooth device","The satellite uses a physical cable to the ground station","Satellite communication only works at low data rates"],
+a:0,
+e:"Satellite communication can have high latency because the signal travels a very large distance between the ground and the satellite and back."
+}
+];
+
+let current=0;
+let score=0;
+let answers=Array(questions.length).fill(null);
+let checked=false;
+
+const quiz=document.getElementById("quiz");
+const result=document.getElementById("result");
+const progress=document.getElementById("progress");
+const scoreEl=document.getElementById("score");
+const fill=document.getElementById("fill");
+
+function renderQuestion(){
+checked=false;
+const x=questions[current];
+
+progress.textContent="Question "+(current+1)+" of "+questions.length;
+scoreEl.textContent="Score: "+score;
+fill.style.width=(current/questions.length*100)+"%";
+
+quiz.innerHTML=
+'<div class="question-card">'+
+'<div class="exam-label">Question '+(current+1)+' &nbsp; [1 mark]</div>'+
+'<div class="question">'+x.q+'</div>'+
+'<div id="options">'+
+x.o.map((option,i)=>
+'<label class="option">'+
+'<input type="radio" name="answer" value="'+i+'">'+
+'<strong>'+String.fromCharCode(65+i)+'.</strong> '+option+
+'</label>'
+).join("")+
+'</div>'+
+'<div id="feedback" class="feedback"></div>'+
+'<div class="actions">'+
+'<button id="check" class="primary">Check Answer</button>'+
+'<button id="next" class="secondary" disabled>'+
+(current===questions.length-1?"Finish":"Next Question")+
+'</button>'+
+'</div></div>';
+
+document.querySelectorAll('input[name="answer"]').forEach(function(radio){
+radio.addEventListener("change",function(){
+answers[current]=Number(this.value);
+});
+});
+
+document.getElementById("check").addEventListener("click",checkAnswer);
+document.getElementById("next").addEventListener("click",nextQuestion);
+}
+
+function checkAnswer(){
+const selected=answers[current];
+const feedback=document.getElementById("feedback");
+
+if(selected===null){
+feedback.textContent="Select one answer.";
+feedback.className="feedback show bad";
+return;
+}
+
+if(checked)return;
+checked=true;
+
+const x=questions[current];
+
+document.querySelectorAll(".option").forEach(function(option,i){
+if(i===x.a)option.classList.add("correct");
+if(i===selected && selected!==x.a)option.classList.add("wrong");
+option.style.pointerEvents="none";
+});
+
+if(selected===x.a){
+score++;
+feedback.textContent="Correct. "+x.e;
+feedback.className="feedback show good";
+}else{
+feedback.textContent="Incorrect. "+x.e;
+feedback.className="feedback show bad";
+}
+
+scoreEl.textContent="Score: "+score;
+document.getElementById("check").disabled=true;
+document.getElementById("next").disabled=false;
+}
+
+function nextQuestion(){
+if(current<questions.length-1){
+current++;
+renderQuestion();
+}else{
+finishQuiz();
+}
+}
+
+function finishQuiz(){
+fill.style.width="100%";
+progress.textContent="Quiz complete";
+quiz.innerHTML="";
+result.style.display="block";
+
+const percent=Math.round(score/questions.length*100);
+
+let message;
+if(percent>=80){
+message="Good performance. Review any questions you answered incorrectly.";
+}else if(percent>=60){
+message="Review the incorrect questions and practise the key characteristics of each wireless method.";
+}else{
+message="Review Wireless, Wi-Fi, Bluetooth, Microwave and Satellite before attempting the quiz again.";
+}
+
+result.innerHTML=
+'<h2>Quiz Complete</h2>'+
+'<div class="big-score">'+score+' / '+questions.length+'</div>'+
+'<p>'+percent+'% — '+message+'</p>'+
+'<h3>Answer Review</h3>'+
+'<div class="review">'+
+questions.map(function(x,i){
+return '<div class="review-item">'+
+'<strong>'+(i+1)+'. '+x.q+'</strong><br>'+
+'Your answer: '+(answers[i]===null?"Not answered":x.o[answers[i]])+'<br>'+
+'Correct answer: '+x.o[x.a]+'<br>'+
+'<span class="small">'+x.e+'</span>'+
+'</div>';
+}).join("")+
+'</div>'+
+'<button class="primary" onclick="restartQuiz()">Restart Quiz</button>';
+}
+
+function restartQuiz(){
+current=0;
+score=0;
+answers=Array(questions.length).fill(null);
+result.style.display="none";
+renderQuestion();
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
