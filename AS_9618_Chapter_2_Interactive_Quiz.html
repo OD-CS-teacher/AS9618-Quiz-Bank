@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Exam-style revision: learner-facing question stems contain no source/notes references. -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AS 9618 Chapter 2 Quiz</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #172033;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 18px 50px;
+  }
+  .header {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.07);
+  }
+  h1 { margin: 0 0 10px; font-size: 28px; }
+  .subtitle { color: #596579; line-height: 1.5; }
+  .progress {
+    margin-top: 18px;
+    height: 10px;
+    background: #e5e9f0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #3b82f6;
+    transition: width .25s ease;
+  }
+  .question {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
+  }
+  .qnum {
+    font-size: 13px;
+    font-weight: bold;
+    color: #3b82f6;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+  .qtext {
+    font-size: 18px;
+    line-height: 1.55;
+    margin-bottom: 18px;
+    font-weight: 600;
+  }
+  .option {
+    display: block;
+    border: 2px solid #dce2ea;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: .15s;
+    line-height: 1.45;
+  }
+  .option:hover { border-color: #8eb8f5; background: #f8fbff; }
+  .option input { margin-right: 10px; }
+  .option.selected { border-color: #3b82f6; background: #eff6ff; }
+  button {
+    border: 0;
+    border-radius: 12px;
+    padding: 15px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #2563eb;
+    color: white;
+  }
+  button:hover { background: #1d4ed8; }
+  button:disabled { opacity: .55; cursor: not-allowed; }
+  .submit-wrap { text-align: center; margin: 28px 0; }
+  .result {
+    display: none;
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-top: 20px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.07);
+  }
+  .score {
+    font-size: 38px;
+    font-weight: bold;
+    margin: 8px 0;
+  }
+  .grade { font-size: 20px; font-weight: bold; margin-bottom: 12px; }
+  .review {
+    margin-top: 24px;
+  }
+  .review-item {
+    border-top: 1px solid #e4e8ef;
+    padding: 16px 0;
+    line-height: 1.5;
+  }
+  .correct { color: #16803a; font-weight: bold; }
+  .incorrect { color: #b42318; font-weight: bold; }
+  .explanation {
+    margin-top: 7px;
+    color: #4b5563;
+  }
+  .topic-box {
+    margin-top: 22px;
+    padding: 18px;
+    background: #f8fafc;
+    border-radius: 12px;
+  }
+  .topic-box h3 { margin-top: 0; }
+  .restart {
+    margin-top: 18px;
+    background: #475569;
+  }
+  .restart:hover { background: #334155; }
+  @media (max-width: 600px) {
+    h1 { font-size: 23px; }
+    .question { padding: 18px; }
+    .qtext { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>AS 9618 Chapter 2 Quiz</h1>
+    <div class="subtitle">
+      Internet • IP Addressing • Bit Streaming • Bit Rate • Ethernet • CSMA/CD
+      <br><br>
+      Answer each question by selecting the best option. The questions are designed to assess understanding and application of the topic.
+    </div>
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <div id="progressText" style="margin-top:8px;color:#596579;font-size:14px;">0 / 15 answered</div>
+  </div>
+
+  <form id="quizForm"></form>
+
+  <div class="submit-wrap">
+    <button id="submitBtn" type="button">Submit Quiz</button>
+  </div>
+
+  <div class="result" id="result">
+    <h2>Quiz Result</h2>
+    <div class="score" id="score"></div>
+    <div class="grade" id="grade"></div>
+    <div id="summary"></div>
+    <div class="topic-box" id="topicBox"></div>
+    <div class="review" id="review"></div>
+    <button class="restart" id="restartBtn" type="button">Try Again</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+{
+  topic:"Internet",
+  q:"Which statement correctly distinguishes the Internet from the World Wide Web?",
+  options:[
+    "The Internet is a service that operates over the World Wide Web.",
+    "The Internet is a global network of interconnected networks, while the World Wide Web is a service that operates over it.",
+    "The Internet and the World Wide Web are two names for exactly the same system.",
+    "The World Wide Web connects networks together, while the Internet only provides web pages."
+  ],
+  answer:1,
+  explanation:"The Internet is the global network of interconnected networks. The World Wide Web is a service that operates over the Internet."
+},
+{
+  topic:"Internet / DNS",
+  q:"A user enters a URL into a web browser. What is the first action taken by the browser?",
+  options:[
+    "The web server immediately sends the website data to the browser.",
+    "The browser renders the HTML, images, CSS and JavaScript.",
+    "The browser sends the domain name to a DNS server.",
+    "The DNS server sends the request directly to the web server."
+  ],
+  answer:2,
+  explanation:"The browser sends the domain name to DNS so that the matching IP address can be found."
+},
+{
+  topic:"DNS",
+  q:"A user enters a domain name into a web browser. What is the main purpose of DNS?",
+  options:[
+    "To translate a domain name into its matching IP address.",
+    "To convert an IP address into a MAC address.",
+    "To store the complete HTML content of every website.",
+    "To transmit video data to the user's device."
+  ],
+  answer:0,
+  explanation:"DNS translates a domain name into its matching IP address."
+},
+{
+  topic:"IPv4",
+  q:"Which statement correctly describes the structure of an IPv4 address?",
+  options:[
+    "Eight blocks of hexadecimal digits, giving 128 bits.",
+    "Four blocks of denary numbers from 0 to 255, giving 32 bits in total.",
+    "Four blocks of hexadecimal digits, giving 128 bits.",
+    "Eight blocks of denary numbers from 0 to 255, giving 64 bits."
+  ],
+  answer:1,
+  explanation:"IPv4 uses four denary blocks from 0 to 255. Each block is 8 bits, so the total is 32 bits."
+},
+{
+  topic:"IPv6",
+  q:"Why was IPv6 introduced?",
+  options:[
+    "IPv4 addresses could not be represented using binary.",
+    "IPv4 could only be used on private networks.",
+    "IPv4 could not support wireless networks.",
+    "The number of available IPv4 addresses was becoming insufficient for the number of people and devices."
+  ],
+  answer:3,
+  explanation:"The notes explain that IPv4 provides over 4 billion addresses, but the growing number of people and devices created a need for a larger address space."
+},
+{
+  topic:"IPv6",
+  q:"Which statement correctly describes the structure of an IPv6 address?",
+  options:[
+    "It consists of 8 blocks of 4 hexadecimal digits and is 128 bits long.",
+    "It consists of 4 blocks of denary numbers and is 32 bits long.",
+    "It consists of 16 blocks of hexadecimal digits and is 64 bits long.",
+    "It consists of 8 blocks of denary numbers and is 64 bits long."
+  ],
+  answer:0,
+  explanation:"IPv6 has eight blocks of four hexadecimal digits. Each block is 16 bits, giving 128 bits in total."
+},
+{
+  topic:"Subnetting",
+  q:"A school divides one large network into several smaller, more manageable networks. Which networking technique is being used?",
+  options:[
+    "Bit streaming",
+    "Subnetting",
+    "DNS resolution",
+    "CSMA/CD"
+  ],
+  answer:1,
+  explanation:"Subnetting divides a larger network into smaller, more manageable subnets."
+},
+{
+  topic:"Subnetting",
+  q:"Which is a benefit of subnetting?",
+  options:[
+    "It guarantees that every device receives a public IP address.",
+    "It makes every network connection dedicated to one user.",
+    "It reduces network traffic by keeping more data within the local subnet.",
+    "It increases the maximum video bit rate of an Internet connection."
+  ],
+  answer:2,
+  explanation:"Subnetting reduces network traffic because less data is broadcast across the whole network and data can remain within the local subnet."
+},
+{
+  topic:"Bit streaming",
+  q:"A live football match is being streamed while the match is taking place. Which type of bit streaming is being used?",
+  options:[
+    "On-demand streaming",
+    "Static streaming",
+    "Buffered-only streaming",
+    "Real-time streaming"
+  ],
+  answer:3,
+  explanation:"Real-time streaming sends data as it is produced. A live football match is an example."
+},
+{
+  topic:"Bit streaming",
+  q:"A user selects a recorded movie that was stored earlier and starts watching it. Which type of streaming is being used?",
+  options:[
+    "On-demand streaming",
+    "Real-time streaming",
+    "Collision streaming",
+    "Dedicated streaming"
+  ],
+  answer:0,
+  explanation:"On-demand streaming uses previously stored content that is streamed when the user requests it."
+},
+{
+  topic:"Bit rate",
+  q:"Which statement correctly defines bit rate?",
+  options:[
+    "The amount of storage available for a video file.",
+    "The number of bits transmitted per second.",
+    "The number of devices connected to a network per second.",
+    "The time needed to store one bit of data."
+  ],
+  answer:1,
+  explanation:"Bit rate is the number of bits transmitted per second. For example, 1 Mbps means 1 million bits per second."
+},
+{
+  topic:"Bit rate / Buffering",
+  q:"A video requires data to arrive at 10 MB per minute. The Internet connection can provide only 5 MB per minute. What is most likely to happen after some time?",
+  options:[
+    "The buffer will continually become fuller and playback will become smoother.",
+    "The video will automatically become a dedicated connection.",
+    "The video will eventually stop and buffering will occur.",
+    "The DNS server will increase the available bit rate."
+  ],
+  answer:2,
+  explanation:"Data arrives more slowly than the video consumes it, so the buffer eventually becomes insufficient and buffering occurs."
+},
+{
+  topic:"Ethernet / Collision",
+  q:"Four computers share the same communication medium. Computers A and C attempt to transmit at the same time. What problem could occur?",
+  options:[
+    "A collision",
+    "Subnetting",
+    "DNS resolution",
+    "Buffering"
+  ],
+  answer:0,
+  explanation:"When two devices transmit at the same time over a shared medium, their data can interfere and cause a collision."
+},
+{
+  topic:"CSMA/CD",
+  q:"Which sequence correctly describes the operation of CSMA/CD after a collision is detected?",
+  options:[
+    "Continue transmitting, ignore the collision, then send the data again immediately.",
+    "Stop transmitting, send a jamming signal, wait for a random amount of time, then try again.",
+    "Change the IP address, contact DNS, then restart transmission.",
+    "Disconnect the network permanently and create a new subnet."
+  ],
+  answer:1,
+  explanation:"After a collision, devices detect it, a jamming signal is sent, devices stop transmitting, wait for a random amount of time, and then try again."
+},
+{
+  topic:"Ethernet / CSMA/CD",
+  q:"Why is CSMA/CD generally not required on modern switched Ethernet networks?",
+  options:[
+    "Modern Ethernet does not transmit data over wired networks.",
+    "Modern Ethernet uses DNS instead of Ethernet protocols.",
+    "Modern switched Ethernet normally uses full-duplex links, so collisions are avoided.",
+    "Modern Ethernet uses only public IP addresses."
+  ],
+  answer:2,
+  explanation:"Modern switched Ethernet normally uses full-duplex links, so collisions are avoided and CSMA/CD is generally not needed."
+}
+];
+
+const form = document.getElementById("quizForm");
+const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
+
+function renderQuiz() {
+  form.innerHTML = "";
+  questions.forEach((item, i) => {
+    const section = document.createElement("section");
+    section.className = "question";
+    section.innerHTML = `
+      <div class="qnum">Question ${i+1} of ${questions.length} • ${item.topic}</div>
+      <div class="qtext">${item.q}</div>
+      <div class="options"></div>
+    `;
+    const optionsDiv = section.querySelector(".options");
+    item.options.forEach((opt, j) => {
+      const label = document.createElement("label");
+      label.className = "option";
+      label.innerHTML = `<input type="radio" name="q${i}" value="${j}"> <strong>${String.fromCharCode(65+j)}.</strong> ${opt}`;
+      optionsDiv.appendChild(label);
+    });
+    form.appendChild(section);
+  });
+
+  form.addEventListener("change", updateProgress);
+}
+
+function updateProgress() {
+  const answered = questions.filter((_, i) =>
+    document.querySelector(`input[name="q${i}"]:checked`)
+  ).length;
+  progressText.textContent = `${answered} / ${questions.length} answered`;
+  progressBar.style.width = `${answered / questions.length * 100}%`;
+
+  document.querySelectorAll(".option").forEach(x => x.classList.remove("selected"));
+  document.querySelectorAll("input:checked").forEach(input => {
+    input.closest(".option").classList.add("selected");
+  });
+}
+
+function gradeText(score) {
+  const percentage = score / questions.length * 100;
+  if (percentage >= 80) return "Excellent understanding";
+  if (percentage >= 70) return "Good understanding";
+  if (percentage >= 60) return "Developing well";
+  if (percentage >= 50) return "Needs more practice";
+  return "Review the topics and try again";
+}
+
+document.getElementById("submitBtn").addEventListener("click", () => {
+  const unanswered = questions.filter((_, i) =>
+    !document.querySelector(`input[name="q${i}"]:checked`)
+  ).length;
+
+  if (unanswered > 0) {
+    alert(`Please answer all questions. ${unanswered} question(s) are still unanswered.`);
+    return;
+  }
+
+  let score = 0;
+  const topicStats = {};
+
+  questions.forEach((item, i) => {
+    const selected = Number(document.querySelector(`input[name="q${i}"]:checked`).value);
+    if (!topicStats[item.topic]) topicStats[item.topic] = {correct:0,total:0};
+    topicStats[item.topic].total++;
+    if (selected === item.answer) {
+      score++;
+      topicStats[item.topic].correct++;
+    }
+  });
+
+  document.getElementById("score").textContent = `${score} / ${questions.length}`;
+  document.getElementById("grade").textContent = gradeText(score);
+  document.getElementById("summary").textContent =
+    `You scored ${Math.round(score/questions.length*100)}%. Review the feedback below to identify areas for improvement.`;
+
+  const topicBox = document.getElementById("topicBox");
+  topicBox.innerHTML = "<h3>Topic performance</h3>";
+  Object.entries(topicStats).forEach(([topic, stats]) => {
+    const p = document.createElement("p");
+    p.innerHTML = `<strong>${topic}:</strong> ${stats.correct}/${stats.total}`;
+    topicBox.appendChild(p);
+  });
+
+  const review = document.getElementById("review");
+  review.innerHTML = "<h3>Question Review</h3>";
+
+  questions.forEach((item, i) => {
+    const selected = Number(document.querySelector(`input[name="q${i}"]:checked`).value);
+    const correct = selected === item.answer;
+    const div = document.createElement("div");
+    div.className = "review-item";
+    div.innerHTML = `
+      <div class="${correct ? "correct" : "incorrect"}">
+        Question ${i+1}: ${correct ? "Correct" : "Incorrect"}
+      </div>
+      <div>Your answer: ${String.fromCharCode(65+selected)}. ${item.options[selected]}</div>
+      <div>Correct answer: ${String.fromCharCode(65+item.answer)}. ${item.options[item.answer]}</div>
+      <div class="explanation">${item.explanation}</div>
+    `;
+    review.appendChild(div);
+  });
+
+  document.getElementById("result").style.display = "block";
+  document.getElementById("result").scrollIntoView({behavior:"smooth"});
+  document.getElementById("submitBtn").disabled = true;
+  document.querySelectorAll("input").forEach(x => x.disabled = true);
+});
+
+document.getElementById("restartBtn").addEventListener("click", () => {
+  document.getElementById("result").style.display = "none";
+  document.getElementById("submitBtn").disabled = false;
+  renderQuiz();
+  updateProgress();
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+renderQuiz();
+</script>
+</body>
+</html>
