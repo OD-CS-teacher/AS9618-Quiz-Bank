@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insertion Sort Animation | Cambridge 9618</title>
+<style>
+:root{--ink:#172033;--muted:#64748b;--line:#cbd5e1;--blue:#2563eb;--gold:#f59e0b;--green:#16a34a;--red:#ef4444}
+*{box-sizing:border-box}body{margin:0;background:#eef2f8;color:var(--ink);font:16px/1.5 system-ui,Segoe UI,Arial,sans-serif}
+main{max-width:1000px;margin:20px auto;padding:14px}h1{margin:0;font-size:clamp(1.5rem,4vw,2.2rem)}header p{margin:4px 0 16px;color:var(--muted)}
+.panel{background:white;border:1px solid #dbe3ef;border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 5px 18px #0f172a0b}
+.settings,.buttons,.legend,.stats{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+label{display:flex;flex-direction:column;gap:5px;font-weight:650;font-size:.9rem}input,select,button{font:inherit;border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:white}input{width:230px}button{font-weight:700;cursor:pointer}button.primary{background:var(--blue);color:white;border-color:var(--blue)}button:disabled{opacity:.45;cursor:not-allowed}.buttons{margin-top:14px}
+.stats{margin-bottom:12px}.pill{background:#eaf1ff;color:#1d4ed8;border-radius:99px;padding:5px 11px;font-weight:750}.pill.gold{background:#fff4d8;color:#92400e}.pill.green{background:#e7f8ee;color:#166534}
+.stage{min-height:160px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:14px;padding:18px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.cell{width:72px;height:84px;border:2px solid #cbd5e1;border-radius:13px;background:white;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;box-shadow:0 3px 6px #0f172a0b}
+.cell .num{font-size:1.7rem;font-weight:850}.cell .idx{font-size:.72rem;color:#64748b}
+.cell.sorted{background:#effdf4;border-color:#86efac}.cell.key{background:#fff8e5;border-color:var(--gold);box-shadow:0 0 0 4px #f59e0b26}.cell.compare{background:#eff6ff;border-color:#60a5fa}.cell.shift{background:#fff1f2;border-color:#fb7185}.cell.inserted{background:#dcfce7;border-color:var(--green)}
+.cell.key:after{content:"KEY";position:absolute;top:-12px;background:#f59e0b;color:#422006;font-size:.65rem;font-weight:900;padding:1px 7px;border-radius:99px}
+.cell.pulse{animation:pulse .55s ease both}.cell.fly{animation:fly .65s cubic-bezier(.2,.8,.2,1) both}.cell.pop{animation:pop .55s ease both}
+@keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.18) translateY(-9px)}100%{transform:scale(1)}}
+@keyframes fly{0%{transform:translateX(-24px) translateY(-10px);opacity:.3}70%{transform:translateX(12px) translateY(-4px);opacity:1}100%{transform:translate(0);opacity:1}}
+@keyframes pop{0%{transform:scale(.7);opacity:.25}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.legend{color:#64748b;font-size:.85rem;margin-top:12px}.swatch{width:13px;height:13px;border-radius:4px;display:inline-block;margin-right:5px}
+.explain{background:#f8fafc;border-radius:12px;padding:14px;min-height:76px}.hint{color:#64748b;font-size:.85rem}
+progress{width:100%;height:12px;accent-color:var(--blue);margin-top:10px}
+pre{white-space:pre-wrap;background:#0f172a;color:#e2e8f0;padding:14px;border-radius:12px;overflow:auto}
+@media(max-width:600px){.panel{padding:12px}input{width:100%}.cell{width:58px;height:70px}.cell .num{font-size:1.4rem}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>Insertion Sort — Visual Animation</h1><p>Cambridge International AS & A Level Computer Science 9618 · Offline step-by-step simulator</p></header>
+<section class="panel">
+<div class="settings">
+<label>Numbers (comma-separated)<input id="values" value="7, 3, 8, 2, 6"></label>
+<label>Order<select id="order"><option value="asc">Ascending (small → large)</option><option value="desc">Descending (large → small)</option></select></label>
+<label>Speed<select id="speed"><option value="1200">Slow</option><option value="750" selected>Normal</option><option value="350">Fast</option></select></label>
+<button id="build" class="primary">Create / Reset</button>
+</div>
+<div class="buttons">
+<button id="prev">← Previous</button><button id="next" class="primary">Next step →</button><button id="play">▶ Play animation</button><button id="pause" disabled>Ⅱ Pause</button><button id="restart">↺ Restart</button>
+</div>
+</section>
+<section class="panel">
+<div class="stats"><span class="pill" id="pass">Pass 0 / 4</span><span class="pill gold" id="key">Key: —</span><span class="pill" id="j">j: —</span><span class="pill green" id="done" hidden>✓ Sorted!</span></div>
+<div id="stage" class="stage"></div><progress id="progress" value="0" max="1"></progress>
+<div class="legend"><span><i class="swatch" style="background:#fff4d8;border:1px solid #f59e0b"></i>Key</span><span><i class="swatch" style="background:#eff6ff;border:1px solid #60a5fa"></i>Comparison</span><span><i class="swatch" style="background:#fff1f2;border:1px solid #fb7185"></i>Shift right</span><span><i class="swatch" style="background:#effdf4;border:1px solid #86efac"></i>Sorted prefix</span></div>
+</section>
+<section class="panel"><h2 style="font-size:1.15rem;margin:0 0 8px">What is happening?</h2><div class="explain" id="explain">Press <b>Play animation</b> or <b>Next step</b>.</div><p class="hint" id="hint">The simulator uses zero-based indexing (Python).</p></section>
+<section class="panel"><h2 style="font-size:1.15rem;margin:0 0 8px">Python code</h2><pre>for i in range(1, len(data)):
+    key = data[i]
+    j = i - 1
+    while j >= 0 and data[j] > key:
+        data[j + 1] = data[j]  # shift right
+        j = j - 1
+    data[j + 1] = key          # insert key</pre></section>
+</main>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+let initial=[], direction='asc', events=[], pos=0, timer=null, lastRendered=-1;
+function moves(left,key){return direction==='asc'?left>key:left<key;}
+function createEvents(){
+ const a=initial.slice();events=[{a:a.slice(),type:'start',i:null,j:null,key:null,sorted:0,msg:'Start: the first value is the sorted portion. Select the next value as the key.'}];
+ for(let i=1;i<a.length;i++){
+  let key=a[i],j=i-1;
+  events.push({a:a.slice(),type:'take',i,j,key,sorted:i,msg:`Pass ${i}: save data[${i}] = ${key} in key. The key is kept separately while values shift.`});
+  events.push({a:a.slice(),type:'setj',i,j,key,sorted:i,msg:`Set j = i − 1 = ${j}. j points to the value immediately before the key.`});
+  while(j>=0){
+   let left=a[j],yes=moves(left,key);
+   events.push({a:a.slice(),type:'check',i,j,key,sorted:i,msg:`Compare data[${j}] = ${left} with key = ${key}. The shift condition is ${yes?'TRUE':'FALSE'}.`});
+   if(!yes)break;
+   a[j+1]=a[j];
+   events.push({a:a.slice(),type:'shift',i,j,key,sorted:i,msg:`Shift ${left} one place right: data[${j+1}] ← data[${j}]. The key (${key}) remains saved.`});
+   j--;
+   events.push({a:a.slice(),type:'decrement',i,j,key,sorted:i,msg:`Move j one place left. Now j = ${j}.`});
+  }
+  a[j+1]=key;
+  events.push({a:a.slice(),type:'insert',i,j,key,sorted:i+1,msg:`Insert key = ${key} into data[${j+1}]. The sorted prefix now has ${i+1} values.`});
+ }
+ events.push({a:a.slice(),type:'finish',i:null,j:null,key:null,sorted:a.length,msg:`Finished! The values are sorted ${direction==='asc'?'ascending':'descending'}.`});
+}
+function render(animate){
+ let e=events[pos]||events[events.length-1],stage=$('stage');stage.innerHTML='';
+ e.a.forEach((v,k)=>{
+  let el=document.createElement('div');el.className='cell';
+  if(k<e.sorted)el.classList.add('sorted');
+  if(e.key!==null && k===e.i && ['take','setj','check','shift','decrement'].includes(e.type))el.classList.add('key');
+  if(e.type==='take'&&k===e.i)el.classList.add('pulse');
+  if(['check','shift','decrement'].includes(e.type)&&k===e.j)el.classList.add(e.type==='shift'?'shift':'compare','pulse');
+  if(e.type==='insert'&&k===e.j+1)el.classList.add('inserted','pop');
+  if(animate&&e.type==='shift'&&k===e.j+1)el.classList.add('fly');
+  el.innerHTML='<span class="num"></span><span class="idx"></span>';el.querySelector('.num').textContent=v;el.querySelector('.idx').textContent='index '+k;
+  stage.appendChild(el);
+ });
+ const total=Math.max(0,initial.length-1);
+ $('pass').textContent=e.type==='finish'?`Pass ${total} / ${total}`:`Pass ${e.i===null?0:e.i} / ${total}`;
+ $('key').textContent='Key: '+(e.key===null?'—':e.key);$('j').textContent='j: '+(e.j===null?'—':e.j);
+ $('done').hidden=e.type!=='finish';$('explain').textContent=e.msg;$('hint').textContent=e.j===null?'Python uses zero-based indexing.':`Current indices: i = ${e.i}; j = ${e.j}.`;
+ $('progress').max=Math.max(1,events.length-1);$('progress').value=pos;
+ $('prev').disabled=pos===0;$('next').disabled=pos===events.length-1;$('play').disabled=pos===events.length-1||timer!==null;$('pause').disabled=timer===null;
+}
+function stop(){if(timer!==null){clearInterval(timer);timer=null;}if(events.length>0)render(false);}
+function step(){if(pos<events.length-1){pos++;render(true);}else stop();}
+function play(){if(timer!==null||pos>=events.length-1)return;timer=setInterval(()=>{if(pos<events.length-1){pos++;render(true);}else stop();},Number($('speed').value));render(false);}
+function reset(){
+ stop();let raw=$('values').value.trim(),nums=raw.split(',').map(x=>x.trim()).filter(Boolean).map(Number);
+ if(nums.length<2||nums.length>20||nums.some(n=>!Number.isFinite(n)||!Number.isInteger(n))){
+ $('explain').textContent='Please enter between 2 and 20 whole numbers, separated by commas.';return;}
+ initial=nums;direction=$('order').value;pos=0;createEvents();render(true);
+}
+$('build').addEventListener('click',reset);$('next').addEventListener('click',step);$('prev').addEventListener('click',()=>{stop();if(pos>0)pos--;render(true);});
+$('play').addEventListener('click',play);$('pause').addEventListener('click',stop);$('restart').addEventListener('click',()=>{stop();pos=0;render(true);});
+$('speed').addEventListener('change',()=>{if(timer!==null){stop();play();}});$('order').addEventListener('change',reset);
+reset();
+})();
+</script>
+</body>
+</html>
